@@ -74,6 +74,13 @@ function stop_spammers_checks($action, $comment)
 
 function stop_spammers_check_stopforumspam()
 {
+  global $conf;
+
+  if (!isset($conf['stop_spammers_sfs_threshold']))
+  {
+    $conf['stop_spammers_sfs_threshold'] = 50;
+  }
+  
   $ip = $_SERVER['REMOTE_ADDR'];
 
   list($dbnow) = pwg_db_fetch_row(pwg_query('SELECT NOW();'));
@@ -105,7 +112,7 @@ SELECT *
 
   if (isset($result['ip']['confidence']))
   {
-    if ($result['ip']['confidence'] > 50)
+    if ($result['ip']['confidence'] > $conf['stop_spammers_sfs_threshold'])
     {
       single_insert(
         STOP_SPAMMERS_TABLE,
