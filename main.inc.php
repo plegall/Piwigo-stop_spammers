@@ -62,10 +62,14 @@ WHERE id = "'. STOP_SPAMMERS_ID .'"';
 }
 
 add_event_handler('user_comment_check', 'stop_spammers_checks', EVENT_HANDLER_PRIORITY_NEUTRAL, 2);
+add_event_handler('contact_form_check', 'stop_spammers_checks', EVENT_HANDLER_PRIORITY_NEUTRAL, 2);
 function stop_spammers_checks($action, $comment)
 {
+  global $page;
+  
   if (!stop_spammers_check_stopforumspam())
   {
+    $page['errors'][] = l10n('IP address rejected');
     return 'reject';
   }
 
